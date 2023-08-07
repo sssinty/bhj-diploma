@@ -1,3 +1,4 @@
+// const { response } = require("express");
 /**
  * Класс User управляет авторизацией, выходом и
  * регистрацией пользователя из приложения
@@ -9,7 +10,7 @@ class User {
    * локальном хранилище.
    * */
   static setCurrent(user) {
-
+    localStorage.setItem('user', user);
   }
 
   /**
@@ -17,7 +18,7 @@ class User {
    * пользователе из локального хранилища.
    * */
   static unsetCurrent() {
-
+    delete localStorage.user
   }
 
   /**
@@ -25,7 +26,7 @@ class User {
    * из локального хранилища
    * */
   static current() {
-
+    localStorage.getItem('user');
   }
 
   /**
@@ -33,8 +34,20 @@ class User {
    * авторизованном пользователе.
    * */
   static fetch(callback) {
+    createRequest(this.URL + '/current', data, 'GET', callback);
 
-  }
+    if(response.success === ture) {
+      User.current();
+    }else {
+      User.unsetCurrent();
+    };
+
+    try {
+      callback(this.response.err, this.response);
+     } catch (err) {
+      callback(err);
+     };
+  } 
 
   /**
    * Производит попытку авторизации.
@@ -55,6 +68,10 @@ class User {
         callback(err, response);
       }
     });
+
+    if(response.success === true) {
+      User.setCurrent(response.user);
+    }
   }
 
   /**
@@ -64,7 +81,16 @@ class User {
    * User.setCurrent.
    * */
   static register(data, callback) {
+    createRequest(this.URL + '/register', data, 'POST', callback);
+    if(response.success === true) {
+      User.setCurrent(response.user);
+    };
 
+    try {
+      callback(this.response.err, this.response);
+     } catch (err) {
+      callback(err);
+     };
   }
 
   /**
@@ -72,6 +98,6 @@ class User {
    * выхода необходимо вызвать метод User.unsetCurrent
    * */
   static logout(callback) {
-
+    createRequest(this.URL + '/logut', data, 'POST', callback);
   }
 }
