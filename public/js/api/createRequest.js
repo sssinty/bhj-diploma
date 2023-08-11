@@ -5,7 +5,6 @@
 const createRequest = (options = {url, data:{mail, password}, method, callback}) => {
     const xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
-    options.url = 'http://localhost:8000/' + url;
     let formData = new FormData();
     if(options.method === 'GET') {
        for(let key in options.data) {
@@ -16,7 +15,7 @@ const createRequest = (options = {url, data:{mail, password}, method, callback})
             formData.append(key, options.data[key]);
         };
     };
- 
+
     xhr.open(options.method, options.url);
     xhr.send(formData);
 

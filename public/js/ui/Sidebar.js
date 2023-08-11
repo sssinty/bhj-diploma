@@ -1,3 +1,6 @@
+const btnRegistr = document.getElementsByClassName("menu-item_register");
+const sidebarToggleBtn = document.getElementsByClassName("sidebar-toggle");
+const bodySidebarMini = document.querySelector("#skin-blue");
 /**
  * Класс Sidebar отвечает за работу боковой колонки:
  * кнопки скрытия/показа колонки в мобильной версии сайта
@@ -18,7 +21,10 @@ class Sidebar {
    * при нажатии на кнопку .sidebar-toggle
    * */
   static initToggleButton() {
-
+    sidebarToggleBtn.onclick = function() {
+      bodySidebarMini.classList.toggle("sidebar-open");
+      bodySidebarMini.classList.toggle("sidebar-collapse");
+    };
   }
 
   /**
@@ -29,6 +35,10 @@ class Sidebar {
    * выходу устанавливает App.setState( 'init' )
    * */
   static initAuthLinks() {
-
+    btnRegistr.onclick = function() {
+      if(App.getModal("#modal-register")) {
+        Modal.open();
+      }
+    }
   }
 }
