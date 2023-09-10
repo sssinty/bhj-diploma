@@ -25,20 +25,19 @@ class Modal {
    * (с помощью метода Modal.onClose)
    * */
   registerEvents() {
-    const closeBtns = document.querySelectorAll('[data-dismiss*="modal"]');
-      for(let btn of closeBtns) {
-        btn.onclick = function() {
-          btn.onClose();
-      }}
-    }
-
-  /**
+      for(let btn of document.querySelectorAll('[data-dismiss="modal"]')) {
+        btn.addEventListener('click', (e) => {
+          this.onClose(e);
+        });
+      }
+  }
+      /**
    * Срабатывает после нажатия на элементы, закрывающие окно.
    * Закрывает текущее окно (Modal.close())
    * */
   onClose(e) {
-    e.onclick = function(){
-      Modal.close();
+    if(e) {
+      this.close();
     }
   }
   /**
@@ -46,12 +45,12 @@ class Modal {
    * со значением «block»
    * */
   open() {
-    this.element.style.setProperty("display", "block");
+    this.element.style.display = 'block'
   }
   /**
    * Закрывает окно: удаляет CSS-свойство display
    * */
   close(){
-    this.element.style.setProperty("display", "none");
+    this.element.style.removeProperty("display");
   }
 }

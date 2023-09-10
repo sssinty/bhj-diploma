@@ -3,6 +3,8 @@
  * Имеет свойство URL, равно пустой строке.
  * */
 class Entity {
+
+  static URL = '';
   /**
    * Запрашивает с сервера список данных.
    * Это могут быть счета или доходы/расходы
@@ -11,16 +13,10 @@ class Entity {
   static list(data, callback){
    createRequest({
     url: this.URL,
-    data,
-    method: 'GET'
-   })
-
-   try {
-    callback(err, response);
-   } catch(err) {
-    callback(err);
-   }
-
+    data: data,
+    method: 'GET',
+    callback: callback
+   });
   }
 
   /**
@@ -31,15 +27,10 @@ class Entity {
   static create(data, callback) {
     createRequest({
       url: this.URL,
-      data,
-      method: 'PUT'
-    })
-
-    try {
-     callback(err, response);
-    } catch (err) {
-     callback(err);
-    };
+      data: data,
+      method: 'PUT',
+      callback: callback
+    });
   }
 
   /**
@@ -49,14 +40,9 @@ class Entity {
   static remove(data, callback) {
     createRequest({
       url: this.URL,
-      data,
-      method: 'DELETE'
+      data: data,
+      method: 'DELETE',
+      callback: callback
     })
-
-    try {
-     callback(err, response);
-    } catch (err) {
-     callback(err);
-    };
   }
 }

@@ -4,12 +4,15 @@
  * Имеет свойство URL, равное '/user'.
  * */
 class User {
+  
+  static URL = '/user'; 
+
   /**
    * Устанавливает текущего пользователя в
    * локальном хранилище.
    * */
   static setCurrent(user) {
-    localStorage.setItem('user', user);
+    localStorage.setItem('user', JSON.stringify(user));
   }
 
   /**
@@ -25,7 +28,7 @@ class User {
    * из локального хранилища
    * */
   static current() {
-    localStorage.getItem('user');
+    return JSON.parse(localStorage.getItem('user'));
   }
 
   /**
@@ -36,20 +39,12 @@ class User {
     createRequest({
       url: this.URL + '/current',
       method:'GET',
-      callback: (err, response) => {
-        if(response.success) {
-          this.current();
+      callback: (error, response) => {
+        if(response.success === true) {
+          User.setCurrent(response.user);
         }
-        this.unsetCurrent();
-        callback(err, response);
-      }
-     });
-
-    try {
-      callback(err,response);
-     } catch (err) {
-      callback(err);
-     };
+          User.unsetCurrent();
+      }});
   } 
 
   /**
@@ -63,22 +58,8 @@ class User {
       url: this.URL + '/login',
       method: 'POST',
       responseType: 'json',
-      data,
-      callback: (err, response) => {
-        if (response && response.user) {
-          this.setCurrent(response.user);
-        }
-        callback(err, response);
-      }
-    });
-
-    try{
-      if(response.success === true) {
-        User.setCurrent(response.user);
-      }
-    } catch (err) {
-      callback(err);
-    }
+      data: data,
+      callback: callback});
   }
 
   /**
@@ -90,21 +71,10 @@ class User {
   static register(data, callback) {
     createRequest({
       url: this.URL + '/register',
-      data,
+      data: data,
       method: 'POST',
-      callback: (err, response) => {
-        if(response.success === true) {
-          this.setCurrent(response.user);
-        };
-        callback(err, response);
-      }
-    })
-    
-    try {
-      callback(err, response);
-     } catch (err) {
-      callback(err);
-     };
+      callback: callback
+    });
   }
 
   /**
@@ -115,18 +85,9 @@ class User {
     createRequest({
       url: this.URL + '/logut',
       method: 'POST',
-      callback: (err, response) => {
+      callback: (error, response) => {
         if(response.success === true) {
-          this.unsetCurrent();
-        } 
-        callback(err, response);
-      }
-    });
-
-    try {
-      callback(err, response);
-     } catch (err) {
-      callback(err);
-     };
+          User.unsetCurrent();
+        }}});
   }
 }

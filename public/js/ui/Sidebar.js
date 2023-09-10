@@ -1,6 +1,4 @@
-const btnRegistr = document.getElementsByClassName("menu-item_register");
-const sidebarToggleBtn = document.getElementsByClassName("sidebar-toggle");
-const bodySidebarMini = document.querySelector("#skin-blue");
+
 /**
  * Класс Sidebar отвечает за работу боковой колонки:
  * кнопки скрытия/показа колонки в мобильной версии сайта
@@ -21,9 +19,10 @@ class Sidebar {
    * при нажатии на кнопку .sidebar-toggle
    * */
   static initToggleButton() {
-    sidebarToggleBtn.onclick = function() {
-      bodySidebarMini.classList.toggle("sidebar-open");
-      bodySidebarMini.classList.toggle("sidebar-collapse");
+    document.querySelector(".sidebar-toggle").onclick = function(e) {
+      e.preventDefault()
+      document.querySelector(".skin-blue").classList.toggle("sidebar-open");
+      document.querySelector(".skin-blue").classList.toggle("sidebar-collapse");
     };
   }
 
@@ -35,10 +34,18 @@ class Sidebar {
    * выходу устанавливает App.setState( 'init' )
    * */
   static initAuthLinks() {
-    btnRegistr.onclick = function() {
-      if(App.getModal("#modal-register")) {
-        Modal.open();
-      }
+    for(let btn of document.querySelectorAll(".menu-item")) {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if(btn.classList.contains("menu-item_register")) {
+         App.getModal('register').open();
+        }else if(btn.classList.contains("menu-item_login")) {
+         App.getModal('login').open();
+        }else if(btn.classList.contains("menu-item_logout")) {
+         User.logout(this.response)
+         App.setState('init');
+        }
+       })
     }
   }
 }
