@@ -12,7 +12,9 @@ class User {
    * локальном хранилище.
    * */
   static setCurrent(user) {
-    localStorage.setItem('user', JSON.stringify(user));
+    if(user) {
+      localStorage.setItem('user', JSON.stringify(user));
+    }
   }
 
   /**
@@ -28,7 +30,10 @@ class User {
    * из локального хранилища
    * */
   static current() {
-    return JSON.parse(localStorage.getItem('user'));
+    let rawData = localStorage.getItem('user');
+    if(rawData) {
+      return JSON.parse(rawData);
+    };
   }
 
   /**
@@ -41,10 +46,12 @@ class User {
       method:'GET',
       callback: (error, response) => {
         if(response.success === true) {
-          User.setCurrent(response.user);
+          this.setCurrent(response.user);
         }
-          User.unsetCurrent();
-      }});
+          this.unsetCurrent();
+          callback(error, response);
+      }
+    });
   } 
 
   /**
@@ -59,7 +66,13 @@ class User {
       method: 'POST',
       responseType: 'json',
       data: data,
-      callback: callback});
+      callback: (error, response) => {
+        if (response && response.user) {
+          this.setCurrent(response.user);
+        }
+        callback(error, response);
+      }
+    });
   }
 
   /**
@@ -73,7 +86,12 @@ class User {
       url: this.URL + '/register',
       data: data,
       method: 'POST',
-      callback: callback
+      callback:  (error, response) => {
+        if (response && response.user) {
+          this.setCurrent(response.user);
+        }
+        callback(error, response);
+      }
     });
   }
 
@@ -83,11 +101,14 @@ class User {
    * */
   static logout(callback) {
     createRequest({
-      url: this.URL + '/logut',
+      url: this.URL + '/logout',
       method: 'POST',
       callback: (error, response) => {
         if(response.success === true) {
           User.unsetCurrent();
-        }}});
+        }
+        callback(error, response);
+      }
+      });
   }
 }

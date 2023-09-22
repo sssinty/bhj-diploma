@@ -15,33 +15,22 @@ const createRequest = function(options) {
             url += `${key}=${options.data[key]}&`
             url = url.slice(0, -1);
         }
-     
     } else {
         for(let key in options.data) {
             formData.append(key, options.data[key]);
         }
     }
 
-    xhr.open(options.method, options.url);
+    xhr.open(options.method, url);
     xhr.send(formData);
-
 
     try {
         xhr.addEventListener("readystatechange", function() {
-            if(this.readyState == xhr.DONE && xhr.status === 200) {
-                options.callback(xhr.response.error, xhr.response);
+            if(this.readyState === this.DONE && this.status >= 200 && this.status < 300) {
+                options.callback(xhr.error, xhr.response);
             }
         })
     } catch(error) { 
-        options.callback(null, error)
+        options.callback(null, error);
     }
-    
-    // xhr.addEventListener('load', () => {
-    //     options.callback(xhr.error, xhr.response);
-    // });
-
-    // xhr.addEventListener('error', () => {
-    //     options.callback(null, xhr.statusText);
-    // });
-
 };

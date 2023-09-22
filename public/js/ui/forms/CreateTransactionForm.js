@@ -10,7 +10,7 @@ class CreateTransactionForm extends AsyncForm {
   constructor(element) {
     super(element);
     this.renderAccountsList();
-    this.element = element
+    this.element = element;
   }
 
   /**
@@ -36,10 +36,10 @@ class CreateTransactionForm extends AsyncForm {
    * */
   onSubmit(data) {
     Transaction.create(data, (error, response) => {
-      this.element.reset();
-      if(response.success) {
+      if(response && response.success) {
+        this.element.reset();
         App.getModal('newIncome').close()
-        App.getModal('newIncome').close()
+        App.getModal('newExpense').close()
         App.update();
       }
     })

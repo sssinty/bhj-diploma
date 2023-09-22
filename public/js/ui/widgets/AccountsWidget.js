@@ -33,7 +33,7 @@ class AccountsWidget {
     this.element.addEventListener('click', (e) => {
       e.preventDefault();
       if (e.target.closest('.create-account')) {
-        return App.getModal('createAccount').open();
+        App.getModal('createAccount').open();
       }
       if (e.target.closest('.account')) {
           this.onSelectAccount(e.target.closest('.account'));
@@ -54,10 +54,10 @@ class AccountsWidget {
   update() {
     if (User.current()) {
       Account.list(User.current(), (error, response) => {
-          if (response.success) {
+          if (response.success === true) {
               this.clear();
-              this.renderItem(response.data);
           }
+          this.renderItem(response.data);
       })
   }
 }
@@ -70,7 +70,7 @@ class AccountsWidget {
    * в боковой колонке
    * */
   clear(){
-    Array.from(this.element).forEach( item => {
+    document.querySelectorAll('.account').forEach( item => {
       item.remove();
     })
   }
@@ -98,7 +98,7 @@ class AccountsWidget {
   getAccountHTML(item){
     return `<li class='account' data-id=${item.id}>
     <a href="#">
-        <span>${item.name} /</span>
+        <span>${item.name} / </span>
         <span>${item.sum}</span>
     </a>
 </li>

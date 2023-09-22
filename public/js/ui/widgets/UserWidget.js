@@ -26,8 +26,9 @@ class UserWidget {
    * авторизованного пользователя
    * */
   update(){
-    if (User.current()) {
-      document.querySelector('#user-name').innerHTML = User.current().name;
-  }
+    let userDate = User.current();
+    if (userDate) {
+      document.querySelector('.user-name').textContent = userDate.name;
+    }
   }
 }

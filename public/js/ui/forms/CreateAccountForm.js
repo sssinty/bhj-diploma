@@ -10,14 +10,15 @@ class CreateAccountForm extends AsyncForm {
    * */
   onSubmit(data) {
     try {
-      const createCheckForm = document.querySelector("#new-account-form");
-      Account.create(data);
-      const modalCheck = new Modal(createCheckForm);
-      modalCheck.onClose(createCheckForm);
-      App.update();
-      document.getElementById('new-account-form').reset();
+      Account.create(data, (error, response) => {
+        if(response.success === true) {
+          App.getModal('createAccount').close()
+          document.getElementById('new-account-form').reset();
+          App.update();
+        }
+      })
     } catch(error) {
-      console.error(error);
+      console.error(response, error);
     }
     
   }

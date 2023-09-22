@@ -19,7 +19,7 @@ class Sidebar {
    * при нажатии на кнопку .sidebar-toggle
    * */
   static initToggleButton() {
-    document.querySelector(".sidebar-toggle").onclick = function(e) {
+    document.querySelector(".sidebar-toggle").onclick = (e) =>  {
       e.preventDefault()
       document.querySelector(".skin-blue").classList.toggle("sidebar-open");
       document.querySelector(".skin-blue").classList.toggle("sidebar-collapse");
@@ -42,8 +42,11 @@ class Sidebar {
         }else if(btn.classList.contains("menu-item_login")) {
          App.getModal('login').open();
         }else if(btn.classList.contains("menu-item_logout")) {
-         User.logout(this.response)
-         App.setState('init');
+         User.logout((error, response) => {
+          if(response.success === true) {
+            App.setState('init');
+          }
+         })
         }
        })
     }
