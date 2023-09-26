@@ -22,7 +22,7 @@ class User {
    * пользователе из локального хранилища.
    * */
   static unsetCurrent() {
-    delete localStorage.user;
+    localStorage.removeItem('user');
   }
 
   /**
@@ -30,10 +30,10 @@ class User {
    * из локального хранилища
    * */
   static current() {
-    let rawData = localStorage.getItem('user');
-    if(rawData) {
-      return JSON.parse(rawData);
-    };
+    if(!localStorage.getItem('user')) {
+      return undefined
+    }
+    return JSON.parse(localStorage.getItem('user')); 
   }
 
   /**
@@ -45,11 +45,12 @@ class User {
       url: this.URL + '/current',
       method:'GET',
       callback: (error, response) => {
-        if(response.success === true) {
+        if(response && response.user) {
           this.setCurrent(response.user);
-        }
+        } else {
           this.unsetCurrent();
-          callback(error, response);
+        } 
+        callback(error, response)
       }
     });
   } 
